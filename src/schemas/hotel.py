@@ -8,8 +8,8 @@ class HotelAddRequest(pydantic.BaseModel):
 
 
 class HotelAddResponse(pydantic.BaseModel):
-    id: uuid.UUID
+    hotel_id: uuid.UUID
 
 
 class HotelDeleteResponse(pydantic.BaseModel):
-    id: uuid.UUID
+    hotel_id: uuid.UUID
