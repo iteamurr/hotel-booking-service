@@ -1,0 +1,30 @@
+services:
+  db:
+    container_name: "db"
+    image: postgres:15.1
+    env_file:
+      - ./.env
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    networks:
+      - local
+
+  backend:
+    container_name: "backend"
+    build:
+      context: .
+      dockerfile: configuration/Dockerfile
+    env_file:
+      - ./.env
+    environment:
+      - POSTGRES_HOST=db
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - local
+
+networks:
+  local:
+    driver: bridge
