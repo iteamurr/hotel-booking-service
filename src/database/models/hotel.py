@@ -1,6 +1,7 @@
 import uuid
 import sqlalchemy
 import sqlalchemy.dialects.postgresql as pg_alchemy
+import datetime
 
 import src.database.models.common as common
 
@@ -15,3 +16,8 @@ class Hotel(common.Base):
     )
     description = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     cost = sqlalchemy.Column(sqlalchemy.Numeric, nullable=False)
+    date_created = sqlalchemy.Column(
+        sqlalchemy.DateTime,
+        nullable=False,
+        default=datetime.datetime.now,
+    )

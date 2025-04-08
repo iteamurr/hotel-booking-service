@@ -1,5 +1,6 @@
 import uuid
 import pydantic
+import enum
 
 
 class HotelAddRequest(pydantic.BaseModel):
@@ -13,3 +14,19 @@ class HotelAddResponse(pydantic.BaseModel):
 
 class HotelDeleteResponse(pydantic.BaseModel):
     hotel_id: uuid.UUID
+
+
+class HotelListResponse(pydantic.BaseModel):
+    hotel_id: uuid.UUID
+    description: str
+    cost: float
+
+
+class HotelOrderBy(str, enum.Enum):
+    cost = "cost"
+    date_created = "date_created"
+
+
+class HotelOrder(pydantic.BaseModel):
+    order_by: HotelOrderBy = HotelOrderBy.date_created
+    descending: bool = False
