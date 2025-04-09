@@ -1,27 +1,23 @@
 # hotel-booking-service
 
+# Project structure
+
 ```
-├── Makefile                <- Makefile with convenience commands like `make lint` or `make format`
-├── README.md               <- The top-level README for developers using this project.
-├── docker-compose.yaml     <- The top-level README for developers using this project.
-├── pyproject.toml          <- Project configuration file with package metadata for 
-│                              hotel-booking-service and configuration for tools like ruff
-├── src
-│   ├── api
-│   │   └── v1
-│   │
-│   ├── config
-│   │
-│   ├── database
-│   |   ├── crud
-│   |   ├── migrations
-│   │   └── models
-│   │
-│   └── schemas
-│
-├── configuration
-│   ├── Dockerfile
-│   └── run.sh
-│
-└── tests
+.
+├── Makefile                <- Common development commands (e.g., `make lint`, `make format`).
+├── README.md               <- Project overview and usage instructions for developers.
+├── docker-compose.yaml     <- Docker Compose setup for services like the database and backend.
+├── pyproject.toml          <- Project metadata and configuration for tools (e.g., Ruff, Poetry).
+├── configuration/          <- Scripts and configs related to running the project (e.g., Dockerfile).
+├── src/                    <- Core application source code.
+│   ├── api/                <- FastAPI route definitions.
+│   │   └── v1/             <- Versioned API endpoints (e.g., `/v1/booking`).
+│   ├── config/             <- Application settings and dependency resolution.
+│   ├── database/           <- Database-related code.
+│   │   ├── crud/           <- Database interaction logic (CRUD operations).
+│   │   ├── migrations/     <- Alembic migrations.
+│   │   │   └── versions/   <- Auto-generated migration scripts.
+│   │   └── models/         <- SQLAlchemy models.
+│   └── schemas/            <- Pydantic models for request and response validation.
+└── tests/                  <- Unit and integration tests.
 ```
