@@ -1,5 +1,5 @@
-from starlette import status
 import httpx
+from starlette import status
 
 import tests.utils as tests_utils
 

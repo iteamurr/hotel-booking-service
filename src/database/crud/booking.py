@@ -1,8 +1,8 @@
 import uuid
+from datetime import date
+
 import sqlalchemy
 import sqlalchemy.ext.asyncio as async_alchemy
-
-from datetime import date
 
 import src.database.models as models
 

@@ -1,7 +1,8 @@
+import datetime
 import uuid
+
 import sqlalchemy
 import sqlalchemy.dialects.postgresql as pg_alchemy
-import datetime
 
 import src.database.models.common as common
 

@@ -1,9 +1,8 @@
-from starlette import status
 import httpx
-
-import tests.utils as tests_utils
+from starlette import status
 
 import src.database.models as src_models
+import tests.utils as tests_utils
 
 
 class TestDeleteHotelHandler:

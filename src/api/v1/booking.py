@@ -1,13 +1,13 @@
 import uuid
-import fastapi
-from fastapi import status
-import sqlalchemy.ext.asyncio as async_alchemy
 
-import src.schemas.booking as booking_schemas
-import src.database.dependencies as db_depends
+import fastapi
+import sqlalchemy.ext.asyncio as async_alchemy
+from fastapi import status
+
 import src.database.crud.booking as booking_crud
 import src.database.crud.hotel as hotel_crud
-
+import src.database.dependencies as db_depends
+import src.schemas.booking as booking_schemas
 
 router = fastapi.APIRouter()
 

@@ -1,24 +1,23 @@
+import datetime
+import os
+import random
 import types
 import typing
 import uuid
-import os
-import datetime
-import random
 
-import pytest
 import alembic.command as alembic_command
-from alembic.config import Config
 import httpx
+import pytest
 import sqlalchemy.ext.asyncio as async_alchemy
 import sqlalchemy.orm as orm_alchemy
 import sqlalchemy_utils
-
-import tests.utils as tests_utils
+from alembic.config import Config
 
 import src.__main__ as src_main
 import src.config as src_config
-import src.database.models as src_models
 import src.database.dependencies as db_depends
+import src.database.models as src_models
+import tests.utils as tests_utils
 
 
 @pytest.fixture()

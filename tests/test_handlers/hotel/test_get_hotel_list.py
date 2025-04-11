@@ -1,10 +1,9 @@
+import httpx
 import pytest
 from starlette import status
-import httpx
-
-import tests.utils as tests_utils
 
 import src.schemas.hotel as hotel_schemas
+import tests.utils as tests_utils
 
 
 class TestGetHotelListHandler:

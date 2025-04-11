@@ -1,7 +1,8 @@
 import uuid
+
 import sqlalchemy
-import sqlalchemy.orm as orm_alchemy
 import sqlalchemy.dialects.postgresql as pg_alchemy
+import sqlalchemy.orm as orm_alchemy
 
 import src.database.models.common as common
 

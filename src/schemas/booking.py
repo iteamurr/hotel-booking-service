@@ -1,6 +1,7 @@
 import uuid
+from datetime import date, datetime
+
 import pydantic
-from datetime import datetime, date
 
 
 class BookingAddRequest(pydantic.BaseModel):

@@ -1,6 +1,7 @@
-import uuid
-import pydantic
 import enum
+import uuid
+
+import pydantic
 
 
 class HotelAddRequest(pydantic.BaseModel):
