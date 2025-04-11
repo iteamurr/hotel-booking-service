@@ -6,6 +6,16 @@ import src.database.models as models
 import src.schemas.hotel as hotel_schemas
 
 
+async def get_hotel_by_id(
+    session: async_alchemy.AsyncSession,
+    hotel_id: uuid.UUID,
+) -> models.Hotel | None:
+    result = await session.execute(
+        sqlalchemy.select(models.Hotel).where(models.Hotel.hotel_id == hotel_id)
+    )
+    return result.scalar_one_or_none()
+
+
 async def create_hotel(
     session: async_alchemy.AsyncSession,
     description: str,
@@ -28,7 +38,8 @@ async def delete_hotel(session: async_alchemy.AsyncSession, hotel_id: uuid.UUID)
 
 
 async def get_hotels(
-    session: async_alchemy.AsyncSession, order: hotel_schemas.HotelOrder
+    session: async_alchemy.AsyncSession,
+    order: hotel_schemas.HotelOrder,
 ) -> list[models.Hotel]:
     order_column = getattr(models.Hotel, order.order_by)
     if order.descending:

@@ -6,6 +6,8 @@ import sqlalchemy.ext.asyncio as async_alchemy
 import src.schemas.booking as booking_schemas
 import src.database.dependencies as db_depends
 import src.database.crud.booking as booking_crud
+import src.database.crud.hotel as hotel_crud
+
 
 router = fastapi.APIRouter()
 
@@ -14,6 +16,11 @@ router = fastapi.APIRouter()
     "/booking",
     response_model=booking_schemas.BookingAddResponse,
     status_code=status.HTTP_201_CREATED,
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "description": "Hotel with this id not found",
+        },
+    },
     tags=["booking"],
 )
 async def add_booking(
@@ -22,6 +29,13 @@ async def add_booking(
 ) -> booking_schemas.BookingAddResponse:
     async with db as session:
         async with session.begin():
+            hotel = await hotel_crud.get_hotel_by_id(session, booking.hotel_id)
+            if not hotel:
+                raise fastapi.HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"Hotel with this id not found",
+                )
+
             db_booking = await booking_crud.create_booking(
                 session,
                 hotel_id=booking.hotel_id,
@@ -32,7 +46,7 @@ async def add_booking(
 
 
 @router.delete(
-    "/booking/{hotel_id}",
+    "/booking/{booking_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     tags=["booking"],
 )
