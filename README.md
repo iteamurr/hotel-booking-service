@@ -21,3 +21,17 @@
 │   └── schemas/            <- Pydantic models for request and response validation.
 └── tests/                  <- Unit and integration tests.
 ```
+
+# Project launch
+
+1. Create .env file:
+
+```
+make env
+```
+
+2. Create and launch service containers:
+
+```
+make up
+```
