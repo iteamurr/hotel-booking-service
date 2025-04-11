@@ -14,6 +14,10 @@ class HotelBookingFactory(typing.Protocol):
     def hotel_id(self) -> uuid.UUID: ...
 
 
+class HotelFactory(typing.Protocol):
+    def make_hotel(self) -> typing.Awaitable[src_models.Hotel]: ...
+
+
 def make_alembic_config(cmd_options: types.SimpleNamespace) -> Config:
     """
     Creates and returns a fully configured Alembic Config object.

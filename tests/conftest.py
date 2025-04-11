@@ -152,6 +152,25 @@ async def hotel(session) -> src_models.Hotel:
 
 
 @pytest.fixture
+async def hotel_factory(
+    session: async_alchemy.AsyncSession,
+) -> tests_utils.HotelFactory:
+    class Factory:
+        async def make_hotel(self) -> src_models.Hotel:
+            test_hotel = src_models.Hotel(
+                description=f"Test Hotel {uuid.uuid4()}",
+                cost=random.randint(50, 500),
+            )
+            session.add(test_hotel)
+            await session.commit()
+            await session.refresh(test_hotel)
+
+            return test_hotel
+
+    return Factory()
+
+
+@pytest.fixture
 async def booking_factory(
     session: async_alchemy.AsyncSession,
     hotel: src_models.Hotel,
@@ -163,6 +182,10 @@ async def booking_factory(
         @property
         def hotel_id(self):
             return self._hotel_id
+
+        @hotel_id.setter
+        def hotel_id(self, value: uuid.UUID):
+            self._hotel_id = value
 
         async def make_booking(self) -> src_models.Booking:
             date_start = datetime.date(2025, 1, 1) + datetime.timedelta(
