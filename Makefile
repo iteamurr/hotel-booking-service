@@ -21,7 +21,7 @@ test:
 # Create .env file with variables.
 .PHONY: env
 env:
-	@cp configuration/.env.example .env
+	@cp config/.env.example .env
 
 # Create and launch service containers.
 .PHONY: up

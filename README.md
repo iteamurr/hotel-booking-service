@@ -8,7 +8,7 @@
 ├── README.md               <- Project overview and usage instructions for developers.
 ├── docker-compose.yaml     <- Docker Compose setup for services like the database and backend.
 ├── pyproject.toml          <- Project metadata and configuration for tools (e.g., Ruff, Poetry).
-├── configuration/          <- Scripts and configs related to running the project (e.g., Dockerfile).
+├── config/                 <- Scripts and configs related to running the project (e.g., Dockerfile).
 ├── src/                    <- Core application source code.
 │   ├── api/                <- FastAPI route definitions.
 │   │   └── v1/             <- Versioned API endpoints (e.g., `/v1/booking`).

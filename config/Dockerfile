@@ -12,7 +12,7 @@ RUN poetry install --no-root --without dev
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait
 RUN chmod +x /wait
 
-ADD configuration/run.sh run.sh
+ADD config/run.sh run.sh
 RUN chmod +x run.sh
 
 EXPOSE 8000
