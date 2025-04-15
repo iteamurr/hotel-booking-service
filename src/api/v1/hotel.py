@@ -1,11 +1,10 @@
 import uuid
 
 import fastapi
-import sqlalchemy.ext.asyncio as async_alchemy
 from fastapi import status
 
-import src.database.crud.hotel as hotel_crud
-import src.database.dependencies as db_depends
+import src.api.dependencies.service as api_depends
+import src.api.services.hotel as hotel_services
 import src.schemas.hotel as hotel_schemas
 
 router = fastapi.APIRouter()
@@ -19,16 +18,11 @@ router = fastapi.APIRouter()
 )
 async def add_hotel(
     hotel: hotel_schemas.HotelAddRequest,
-    db: async_alchemy.AsyncSession = fastapi.Depends(db_depends.get_db),
+    service: hotel_services.HotelService = fastapi.Depends(
+        api_depends.get_hotel_service
+    ),
 ) -> hotel_schemas.HotelAddResponse:
-    async with db as session:
-        async with session.begin():
-            db_hotel = await hotel_crud.create_hotel(
-                session,
-                description=hotel.description,
-                cost=hotel.cost,
-            )
-            return hotel_schemas.HotelAddResponse(hotel_id=db_hotel.hotel_id)
+    return await service.create_hotel(hotel)
 
 
 @router.delete(
@@ -38,11 +32,11 @@ async def add_hotel(
 )
 async def delete_hotel(
     hotel_id: uuid.UUID,
-    db: async_alchemy.AsyncSession = fastapi.Depends(db_depends.get_db),
+    service: hotel_services.HotelService = fastapi.Depends(
+        api_depends.get_hotel_service
+    ),
 ):
-    async with db as session:
-        async with session.begin():
-            await hotel_crud.delete_hotel(session, hotel_id=hotel_id)
+    await service.delete_hotel(hotel_id)
 
 
 @router.get(
@@ -53,16 +47,8 @@ async def delete_hotel(
 )
 async def get_hotel_list(
     order: hotel_schemas.HotelOrder = fastapi.Depends(),
-    db: async_alchemy.AsyncSession = fastapi.Depends(db_depends.get_db),
+    service: hotel_services.HotelService = fastapi.Depends(
+        api_depends.get_hotel_service
+    ),
 ) -> list[hotel_schemas.HotelListResponse]:
-    async with db as session:
-        async with session.begin():
-            hotel_list = await hotel_crud.get_hotels(session, order=order)
-    return [
-        hotel_schemas.HotelListResponse(
-            hotel_id=hotel.hotel_id,
-            cost=hotel.cost,
-            description=hotel.description,
-        )
-        for hotel in hotel_list
-    ]
+    return await service.list_hotels(order)

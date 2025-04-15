@@ -14,8 +14,8 @@ import sqlalchemy_utils
 from alembic.config import Config
 
 import src.__main__ as src_main
+import src.api.dependencies.session as db_depends
 import src.config as src_config
-import src.database.dependencies as db_depends
 import src.database.models as src_models
 import tests.utils as tests_utils
 

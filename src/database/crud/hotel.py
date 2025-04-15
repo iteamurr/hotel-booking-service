@@ -1,52 +1,63 @@
+import abc
 import uuid
 
 import sqlalchemy
-import sqlalchemy.ext.asyncio as async_alchemy
 
+import src.database.crud.common as crud_common
 import src.database.models as models
 import src.schemas.hotel as hotel_schemas
 
 
-async def get_hotel_by_id(
-    session: async_alchemy.AsyncSession,
-    hotel_id: uuid.UUID,
-) -> models.Hotel | None:
-    result = await session.execute(
-        sqlalchemy.select(models.Hotel).where(models.Hotel.hotel_id == hotel_id)
-    )
-    return result.scalar_one_or_none()
+class HotelRepo(abc.ABC):
+    @abc.abstractmethod
+    async def create(self, description: str, cost: int) -> models.Hotel:
+        pass
+
+    @abc.abstractmethod
+    async def delete(self, hotel_id: uuid.UUID) -> None:
+        pass
 
 
-async def create_hotel(
-    session: async_alchemy.AsyncSession,
-    description: str,
-    cost: int,
-) -> models.Hotel:
-    session.add(new_hotel := models.Hotel(description=description, cost=cost))
-    await session.flush()
-    return new_hotel
+class HotelReader(abc.ABC):
+    @abc.abstractmethod
+    async def get_by_id(self, hotel_id: uuid.UUID) -> models.Hotel | None:
+        pass
+
+    @abc.abstractmethod
+    async def get_all(self, order: hotel_schemas.HotelOrder) -> list[models.Hotel]:
+        pass
 
 
-async def delete_hotel(session: async_alchemy.AsyncSession, hotel_id: uuid.UUID):
-    result = await session.execute(
-        sqlalchemy.select(models.Hotel).where(models.Hotel.hotel_id == hotel_id)
-    )
-    hotel = result.scalar_one_or_none()
+class HotelRepoImpl(crud_common.SQLAlchemyRepo, HotelRepo):
+    async def create(self, description: str, cost: int) -> models.Hotel:
+        hotel = models.Hotel(description=description, cost=cost)
+        self.session.add(hotel)
+        await self.session.flush()
+        return hotel
 
-    if hotel:
-        await session.delete(hotel)
-        await session.commit()
+    async def delete(self, hotel_id: uuid.UUID) -> None:
+        result = await self.session.execute(
+            sqlalchemy.select(models.Hotel).where(models.Hotel.hotel_id == hotel_id)
+        )
+        hotel = result.scalar_one_or_none()
+        if hotel:
+            await self.session.delete(hotel)
+            await self.session.commit()
 
 
-async def get_hotels(
-    session: async_alchemy.AsyncSession,
-    order: hotel_schemas.HotelOrder,
-) -> list[models.Hotel]:
-    order_column = getattr(models.Hotel, order.order_by)
-    if order.descending:
-        order_column = order_column.desc()
+class HotelReaderImpl(crud_common.SQLAlchemyRepo, HotelReader):
+    async def get_by_id(self, hotel_id: uuid.UUID) -> models.Hotel | None:
+        result = await self.session.execute(
+            sqlalchemy.select(models.Hotel).where(models.Hotel.hotel_id == hotel_id)
+        )
+        return result.scalar_one_or_none()
 
-    result = await session.execute(
-        sqlalchemy.select(models.Hotel).order_by(order_column)
-    )
-    return result.scalars().all()
+    async def get_all(self, order: hotel_schemas.HotelOrder) -> list[models.Hotel]:
+        order_column = getattr(models.Hotel, order.order_by)
+        if order.descending:
+            order_column = order_column.desc()
+
+        result = await self.session.execute(
+            sqlalchemy.select(models.Hotel).order_by(order_column)
+        )
+        return result.scalars().all()

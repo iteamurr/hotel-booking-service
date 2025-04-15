@@ -1,12 +1,10 @@
 import uuid
 
 import fastapi
-import sqlalchemy.ext.asyncio as async_alchemy
 from fastapi import status
 
-import src.database.crud.booking as booking_crud
-import src.database.crud.hotel as hotel_crud
-import src.database.dependencies as db_depends
+import src.api.dependencies.service as api_depends
+import src.api.services.booking as booking_services
 import src.schemas.booking as booking_schemas
 
 router = fastapi.APIRouter()
@@ -25,24 +23,11 @@ router = fastapi.APIRouter()
 )
 async def add_booking(
     booking: booking_schemas.BookingAddRequest,
-    db: async_alchemy.AsyncSession = fastapi.Depends(db_depends.get_db),
+    service: booking_services.BookingService = fastapi.Depends(
+        api_depends.get_booking_service
+    ),
 ) -> booking_schemas.BookingAddResponse:
-    async with db as session:
-        async with session.begin():
-            hotel = await hotel_crud.get_hotel_by_id(session, booking.hotel_id)
-            if not hotel:
-                raise fastapi.HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail=f"Hotel with this id not found",
-                )
-
-            db_booking = await booking_crud.create_booking(
-                session,
-                hotel_id=booking.hotel_id,
-                date_start=booking.date_start,
-                date_end=booking.date_end,
-            )
-    return booking_schemas.BookingAddResponse(booking_id=db_booking.booking_id)
+    return await service.create_booking(booking)
 
 
 @router.delete(
@@ -52,11 +37,11 @@ async def add_booking(
 )
 async def delete_booking(
     booking_id: uuid.UUID,
-    db: async_alchemy.AsyncSession = fastapi.Depends(db_depends.get_db),
+    service: booking_services.BookingService = fastapi.Depends(
+        api_depends.get_booking_service
+    ),
 ):
-    async with db as session:
-        async with session.begin():
-            await booking_crud.delete_booking(session, booking_id=booking_id)
+    await service.delete_booking(booking_id)
 
 
 @router.get(
@@ -67,19 +52,8 @@ async def delete_booking(
 )
 async def get_booking_list(
     hotel_id: uuid.UUID,
-    db: async_alchemy.AsyncSession = fastapi.Depends(db_depends.get_db),
+    service: booking_services.BookingService = fastapi.Depends(
+        api_depends.get_booking_service
+    ),
 ) -> list[booking_schemas.BookingListResponse]:
-    async with db as session:
-        async with session.begin():
-            booking_list = await booking_crud.get_bookings_by_hotel_id(
-                session=session,
-                hotel_id=hotel_id,
-            )
-    return [
-        booking_schemas.BookingListResponse(
-            booking_id=booking.booking_id,
-            date_start=booking.date_start,
-            date_end=booking.date_end,
-        )
-        for booking in booking_list
-    ]
+    return await service.list_bookings_by_hotel(hotel_id)

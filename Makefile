@@ -13,6 +13,11 @@ lint:
 format:
 	poetry run python -m ruff format src/ tests/
 
+# Fixing import problems
+.PHONY: fix-imports
+fix-imports:
+	poetry run ruff check --select I --fix  
+
 # Run project tests.
 .PHONY: test
 test:

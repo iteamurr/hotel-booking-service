@@ -22,12 +22,6 @@ services:
       - "8000:8000"
     depends_on:
       - db
-    command: >
-      bash -c "
-      while !</dev/tcp/db/5432; do
-        echo 'Waiting for database...';
-        sleep 1;
-      done;
     networks:
       - local
 
