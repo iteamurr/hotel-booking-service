@@ -14,9 +14,10 @@ import sqlalchemy_utils
 from alembic.config import Config
 
 import src.__main__ as src_main
-import src.api.dependencies.session as db_depends
-import src.config as src_config
-import src.database.models as src_models
+import src.infrastructure.config.dependencies as src_config
+import src.infrastructure.db.models.booking as booking_models
+import src.infrastructure.db.models.hotel as hotel_models
+import src.presentation.api.dependencies.session as db_depends
 import tests.utils as tests_utils
 
 
@@ -62,7 +63,7 @@ def alembic_config(postgres) -> Config:
     Returns a configured Alembic Config object for database migration.
     """
     cmd_options = types.SimpleNamespace(
-        config="src/database/",
+        config="src/infrastructure/db/",
         name="alembic",
         pg_url=postgres,
         raiseerr=False,
@@ -139,8 +140,8 @@ async def session(
 
 
 @pytest.fixture
-async def hotel(session) -> src_models.Hotel:
-    test_hotel = src_models.Hotel(
+async def hotel(session) -> hotel_models.Hotel:
+    test_hotel = hotel_models.Hotel(
         description="Test Hotel",
         cost=150,
     )
@@ -155,8 +156,8 @@ async def hotel_factory(
     session: async_alchemy.AsyncSession,
 ) -> tests_utils.HotelFactory:
     class Factory:
-        async def make_hotel(self) -> src_models.Hotel:
-            test_hotel = src_models.Hotel(
+        async def make_hotel(self) -> hotel_models.Hotel:
+            test_hotel = hotel_models.Hotel(
                 description=f"Test Hotel {uuid.uuid4()}",
                 cost=random.randint(50, 500),
             )
@@ -172,7 +173,7 @@ async def hotel_factory(
 @pytest.fixture
 async def booking_factory(
     session: async_alchemy.AsyncSession,
-    hotel: src_models.Hotel,
+    hotel: hotel_models.Hotel,
 ) -> tests_utils.HotelBookingFactory:
     class Factory:
         def __init__(self):
@@ -186,11 +187,11 @@ async def booking_factory(
         def hotel_id(self, value: uuid.UUID):
             self._hotel_id = value
 
-        async def make_booking(self) -> src_models.Booking:
+        async def make_booking(self) -> booking_models.Booking:
             date_start = datetime.date(2025, 1, 1) + datetime.timedelta(
                 days=random.randint(0, 365)
             )
-            test_booking = src_models.Booking(
+            test_booking = booking_models.Booking(
                 date_start=date_start,
                 date_end=date_start + datetime.timedelta(days=random.randint(1, 14)),
                 hotel_id=hotel.hotel_id,

@@ -5,17 +5,18 @@ import uuid
 
 from alembic.config import Config
 
-import src.database.models as src_models
+import src.infrastructure.db.models.booking as booking_models
+import src.infrastructure.db.models.hotel as hotel_models
 
 
 class HotelBookingFactory(typing.Protocol):
-    def make_booking(self) -> typing.Awaitable[src_models.Booking]: ...
+    def make_booking(self) -> typing.Awaitable[booking_models.Booking]: ...
     @property
     def hotel_id(self) -> uuid.UUID: ...
 
 
 class HotelFactory(typing.Protocol):
-    def make_hotel(self) -> typing.Awaitable[src_models.Hotel]: ...
+    def make_hotel(self) -> typing.Awaitable[hotel_models.Hotel]: ...
 
 
 def make_alembic_config(cmd_options: types.SimpleNamespace) -> Config:

@@ -1,7 +1,7 @@
 import httpx
 from starlette import status
 
-import src.database.models as src_models
+import src.infrastructure.db.models.hotel as hotel_models
 import tests.utils as tests_utils
 
 
@@ -13,7 +13,7 @@ class TestDeleteHotelHandler:
     async def test_base_scenario(
         self,
         client: httpx.AsyncClient,
-        hotel: src_models.Hotel,
+        hotel: hotel_models.Hotel,
         booking_factory: tests_utils.HotelBookingFactory,
     ):
         booking_factory.hotel_id = hotel.hotel_id

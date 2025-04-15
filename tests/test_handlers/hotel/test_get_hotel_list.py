@@ -2,7 +2,7 @@ import httpx
 import pytest
 from starlette import status
 
-import src.schemas.hotel as hotel_schemas
+import src.presentation.schemas.hotel as hotel_schemas
 import tests.utils as tests_utils
 
 

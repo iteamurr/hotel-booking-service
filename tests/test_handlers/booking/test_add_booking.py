@@ -4,7 +4,7 @@ import uuid
 import httpx
 from starlette import status
 
-import src.database.models as src_models
+import src.infrastructure.db.models.hotel as hotel_models
 
 
 class TestAddBookingHandler:
@@ -15,7 +15,7 @@ class TestAddBookingHandler:
     async def test_base_scenario(
         self,
         client: httpx.AsyncClient,
-        hotel: src_models.Hotel,
+        hotel: hotel_models.Hotel,
     ):
         payload = {
             "hotel_id": str(hotel.hotel_id),
@@ -32,7 +32,7 @@ class TestAddBookingHandler:
     async def test_missing_field(
         self,
         client: httpx.AsyncClient,
-        hotel: src_models.Hotel,
+        hotel: hotel_models.Hotel,
     ):
         payload = {
             "hotel_id": str(hotel.hotel_id),
