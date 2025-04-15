@@ -45,7 +45,7 @@ async def delete_booking(
 
 
 @router.get(
-    "/booking/{hotel_id}/list",
+    "/hotel/{hotel_id}/bookings",
     response_model=list[booking_schemas.BookingListResponse],
     status_code=status.HTTP_200_OK,
     tags=["booking"],

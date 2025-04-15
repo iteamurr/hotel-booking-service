@@ -7,7 +7,7 @@ import tests.utils as tests_utils
 class TestGetBookingListHandler:
     @staticmethod
     def get_url() -> str:
-        return "/api/v1/booking/{0}/list"
+        return "/api/v1/hotel/{0}/bookings"
 
     async def test_base_scenario(
         self,
