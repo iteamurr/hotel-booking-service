@@ -10,3 +10,9 @@ class BookingReader(abc.ABC):
         self,
         hotel_id: uuid.UUID,
     ) -> list[booking_models.Booking]: ...
+
+    @abc.abstractmethod
+    async def get_by_id(
+        self,
+        booking_id: uuid.UUID,
+    ) -> booking_models.Booking | None: ...
