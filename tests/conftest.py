@@ -17,7 +17,7 @@ import src.__main__ as src_main
 import src.infrastructure.config.dependencies as src_config
 import src.infrastructure.db.models.booking as booking_models
 import src.infrastructure.db.models.hotel as hotel_models
-import src.presentation.api.dependencies.session as db_depends
+import src.presentation.api.routes.v1.dependencies.common_depends as common_depends
 import tests.utils as tests_utils
 
 
@@ -91,7 +91,7 @@ async def migrated_postgres(postgres, alembic_config: Config):
 @pytest.fixture
 async def client(
     migrated_postgres,
-    manager: db_depends.SessionManager = db_depends.SessionManager(),
+    manager: common_depends.SessionManager = common_depends.SessionManager(),
 ) -> typing.AsyncGenerator[httpx.AsyncClient, None]:
     """
     Returns an HTTPX async client with an ASGI app, ready for API testing.

@@ -1,7 +1,7 @@
 import uuid
 
-import src.infrastructure.db.repositories.uow as repos_uow
 import src.presentation.schemas.hotel as hotel_schemas
+import src.shared_kernel.building_blocks.infractructure.uow as repos_uow
 
 
 class HotelService:

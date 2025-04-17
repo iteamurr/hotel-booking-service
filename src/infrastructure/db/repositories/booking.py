@@ -3,12 +3,13 @@ from datetime import date
 
 import sqlalchemy
 
-import src.domain.repositories.booking as booking_repos
-import src.domain.repositories.common as common_repos
+import src.application.booking.interfaces.reader as booking_reader
+import src.application.booking.interfaces.repo as booking_repo
 import src.infrastructure.db.models.booking as booking_models
+import src.shared_kernel.building_blocks.infractructure.repo as common_repos
 
 
-class BookingRepoImpl(common_repos.SQLAlchemyRepo, booking_repos.BookingRepo):
+class BookingRepoImpl(common_repos.SQLAlchemyRepo, booking_repo.BookingRepo):
     async def create(
         self,
         hotel_id: uuid.UUID,
@@ -37,7 +38,7 @@ class BookingRepoImpl(common_repos.SQLAlchemyRepo, booking_repos.BookingRepo):
             await self.session.commit()
 
 
-class BookingReaderImpl(common_repos.SQLAlchemyRepo, booking_repos.BookingReader):
+class BookingReaderImpl(common_repos.SQLAlchemyRepo, booking_reader.BookingReader):
     async def get_by_hotel_id(
         self, hotel_id: uuid.UUID
     ) -> list[booking_models.Booking]:

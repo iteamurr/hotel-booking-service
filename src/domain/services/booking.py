@@ -2,8 +2,8 @@ import uuid
 
 import fastapi
 
-import src.infrastructure.db.repositories.uow as repos_uow
 import src.presentation.schemas.booking as booking_schemas
+import src.shared_kernel.building_blocks.infractructure.uow as repos_uow
 
 
 class BookingService:

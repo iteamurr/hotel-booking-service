@@ -1,11 +1,26 @@
+import abc
+
 import sqlalchemy.ext.asyncio as async_alchemy
 
-import src.domain.repositories.common as common_repos
 import src.infrastructure.db.repositories.booking as booking_repos
 import src.infrastructure.db.repositories.hotel as hotel_repos
 
 
-class SQLAlchemyUnitOfWork(common_repos.AbstractUnitOfWork):
+class AbstractUnitOfWork(abc.ABC):
+    @abc.abstractmethod
+    async def __aenter__(self): ...
+
+    @abc.abstractmethod
+    async def __aexit__(self, exc_type, exc_val, exc_tb): ...
+
+    @abc.abstractmethod
+    async def commit(self): ...
+
+    @abc.abstractmethod
+    async def rollback(self): ...
+
+
+class SQLAlchemyUnitOfWork(AbstractUnitOfWork):
     def __init__(
         self,
         session_factory: async_alchemy.async_sessionmaker[async_alchemy.AsyncSession],

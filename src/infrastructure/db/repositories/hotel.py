@@ -2,13 +2,14 @@ import uuid
 
 import sqlalchemy
 
-import src.domain.repositories.common as common_repos
-import src.domain.repositories.hotel as hotel_repos
+import src.application.hotel.interfaces.reader as hotel_reader
+import src.application.hotel.interfaces.repo as hotel_repo
 import src.infrastructure.db.models.hotel as hotel_models
 import src.presentation.schemas.hotel as hotel_schemas
+import src.shared_kernel.building_blocks.infractructure.repo as common_repos
 
 
-class HotelRepoImpl(common_repos.SQLAlchemyRepo, hotel_repos.HotelRepo):
+class HotelRepoImpl(common_repos.SQLAlchemyRepo, hotel_repo.HotelRepo):
     async def create(self, description: str, cost: int) -> hotel_models.Hotel:
         hotel = hotel_models.Hotel(description=description, cost=cost)
         self.session.add(hotel)
@@ -27,7 +28,7 @@ class HotelRepoImpl(common_repos.SQLAlchemyRepo, hotel_repos.HotelRepo):
             await self.session.commit()
 
 
-class HotelReaderImpl(common_repos.SQLAlchemyRepo, hotel_repos.HotelReader):
+class HotelReaderImpl(common_repos.SQLAlchemyRepo, hotel_reader.HotelReader):
     async def get_by_id(self, hotel_id: uuid.UUID) -> hotel_models.Hotel | None:
         result = await self.session.execute(
             sqlalchemy.select(hotel_models.Hotel).where(

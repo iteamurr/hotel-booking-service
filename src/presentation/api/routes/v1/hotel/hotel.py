@@ -4,7 +4,7 @@ import fastapi
 from fastapi import status
 
 import src.domain.services.hotel as hotel_services
-import src.presentation.api.dependencies.service as api_depends
+import src.presentation.api.routes.v1.hotel.dependencies.hotel_depends as hotel_depends
 import src.presentation.schemas.hotel as hotel_schemas
 
 router = fastapi.APIRouter()
@@ -19,7 +19,7 @@ router = fastapi.APIRouter()
 async def add_hotel(
     hotel: hotel_schemas.HotelAddRequest,
     service: hotel_services.HotelService = fastapi.Depends(
-        api_depends.get_hotel_service
+        hotel_depends.get_hotel_service
     ),
 ) -> hotel_schemas.HotelAddResponse:
     return await service.create_hotel(hotel)
@@ -33,7 +33,7 @@ async def add_hotel(
 async def delete_hotel(
     hotel_id: uuid.UUID,
     service: hotel_services.HotelService = fastapi.Depends(
-        api_depends.get_hotel_service
+        hotel_depends.get_hotel_service
     ),
 ):
     await service.delete_hotel(hotel_id)
@@ -48,7 +48,7 @@ async def delete_hotel(
 async def get_hotel_list(
     order: hotel_schemas.HotelOrder = fastapi.Depends(),
     service: hotel_services.HotelService = fastapi.Depends(
-        api_depends.get_hotel_service
+        hotel_depends.get_hotel_service
     ),
 ) -> list[hotel_schemas.HotelListResponse]:
     return await service.list_hotels(order)
