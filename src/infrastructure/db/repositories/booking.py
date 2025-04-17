@@ -48,3 +48,11 @@ class BookingReaderImpl(common_repos.SQLAlchemyRepo, booking_reader.BookingReade
             .order_by(booking_models.Booking.date_start.asc())
         )
         return result.scalars().all()
+
+    async def get_by_id(self, booking_id: uuid.UUID) -> booking_models.Booking | None:
+        result = await self.session.execute(
+            sqlalchemy.select(booking_models.Booking).where(
+                booking_models.Booking.booking_id == booking_id
+            )
+        )
+        return result.scalar_one_or_none()

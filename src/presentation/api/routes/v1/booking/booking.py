@@ -33,6 +33,11 @@ async def add_booking(
 @router.delete(
     "/booking/{booking_id}",
     status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "description": "Booking with this id not found",
+        },
+    },
     tags=["booking"],
 )
 async def delete_booking(

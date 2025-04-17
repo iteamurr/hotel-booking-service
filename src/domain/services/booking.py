@@ -32,6 +32,12 @@ class BookingService:
 
     async def delete_booking(self, booking_id: uuid.UUID):
         async with self.uow:
+            booking = await self.uow.booking_reader.get_by_id(booking_id)
+            if not booking:
+                raise fastapi.HTTPException(
+                    status_code=fastapi.status.HTTP_404_NOT_FOUND,
+                    detail="Booking with this id not found",
+                )
             await self.uow.bookings.delete(booking_id)
 
     async def list_bookings_by_hotel(

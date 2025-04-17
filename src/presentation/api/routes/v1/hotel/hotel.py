@@ -28,6 +28,11 @@ async def add_hotel(
 @router.delete(
     "/hotel/{hotel_id}",
     status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "description": "Hotel with this id not found",
+        },
+    },
     tags=["hotel"],
 )
 async def delete_hotel(

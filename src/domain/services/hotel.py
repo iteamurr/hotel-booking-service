@@ -1,5 +1,7 @@
 import uuid
 
+import fastapi
+
 import src.presentation.schemas.hotel as hotel_schemas
 import src.shared_kernel.building_blocks.infractructure.uow as repos_uow
 
@@ -21,6 +23,12 @@ class HotelService:
 
     async def delete_hotel(self, hotel_id: uuid.UUID):
         async with self.uow:
+            hotel = await self.uow.hotel_reader.get_by_id(hotel_id)
+            if not hotel:
+                raise fastapi.HTTPException(
+                    status_code=fastapi.status.HTTP_404_NOT_FOUND,
+                    detail="Hotel with this id not found",
+                )
             await self.uow.hotels.delete(hotel_id)
 
     async def list_hotels(
