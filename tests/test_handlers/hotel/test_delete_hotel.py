@@ -1,3 +1,5 @@
+import uuid
+
 import httpx
 from starlette import status
 
@@ -21,3 +23,7 @@ class TestDeleteHotelHandler:
 
         response = await client.delete(url=self.get_url().format(hotel.hotel_id))
         assert response.status_code == status.HTTP_204_NO_CONTENT
+
+    async def test_deleting_missing_hotel(self, client: httpx.AsyncClient):
+        response = await client.delete(url=self.get_url().format(str(uuid.uuid4())))
+        assert response.status_code == status.HTTP_404_NOT_FOUND
